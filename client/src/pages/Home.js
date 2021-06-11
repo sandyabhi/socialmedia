@@ -1,40 +1,44 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
-import { Grid } from "semantic-ui-react";
+// import { useQuery } from "@apollo/react-hooks";
+// import gql from "graphql-tag";
+import { gql, useQuery } from '@apollo/client';
+
+import { Grid ,Transition} from "semantic-ui-react";
 import PostCard from "../components/PostCard";
 
 function Home() {
   const {
     loading,
-    data: { getPosts: posts },
-  } = useQuery(FETCH_POST_QUERY);
-  if (data) {
-    console.log(data);
-  }
+    data: { getPosts: posts } = {}
+  } = useQuery(FETCH_POSTS_QUERY)
+  
 
   return (
     <Grid columns={3}>
-      <Grid.Row>
-        <h1>Recent Post</h1>
+      <Grid.Row className="page-title">
+        <h1>Recent Posts</h1>
       </Grid.Row>
       <Grid.Row>
+      
         {loading ? (
-          <h1>Loadng post...</h1>
+          <h1>Loading posts..</h1>
         ) : (
-          posts &&
-          posts.map((post) => {
-            <Grid.Column key={post.id}>
-              <PostCard post={post} />
-            </Grid.Column>;
-          })
+          <Transition.Group>
+            {posts &&
+              posts.map((post) => (
+                <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
+                  <PostCard post={post} />
+                </Grid.Column>
+              ))}
+          </Transition.Group>
         )}
       </Grid.Row>
     </Grid>
   );
 }
 
-const FETCH_POST_QUERY = gql`
+
+const FETCH_POSTS_QUERY = gql`
   {
     getPosts {
       id
@@ -46,10 +50,10 @@ const FETCH_POST_QUERY = gql`
         username
       }
       commentCount
-      comment {
+      comments {
         id
         username
-        createdAt
+         createdAt
         body
       }
     }
