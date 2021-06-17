@@ -34,6 +34,9 @@ function MenuBar() {
       />
 
       <Menu.Menu position="right">
+
+       {/* TODO Dark Mode */}
+
         <Menu.Item
           name="login"
           active={activeItem === 'login'}
